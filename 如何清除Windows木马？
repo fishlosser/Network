@@ -1,0 +1,77 @@
+Windows
+
+账户检查
+
+先看有没有开小号
+net user 查看用户，管理 本地用户和组用户
+net user username 查看用户登录情况
+lusrmgr.msc 打开本地用户组–window 10以下版本
+日志查看
+
+
+看一下对方干了什么，但一个优秀的入侵者会把日志删掉–此地无银三百两
+win+r–>eventvwr.msc
+最近文档
+
+
+通过查看最近文档，最近数据交互，可以判断自己主机是否真的被入侵了，可能会有临时文件目录藏匿木马、dns污染指向黑客ip等
+C:\Users\Administrator\Rcent–>系统临时文件(需要有一定的排查基础）
+win+R–>%UserProfile%\Recent–>用户最近打开文件（直接欣赏你的过去）
+注册表
+
+
+注册表—win+r–>regedit
+注册表主要注意以下几个位置
+启动项注册表位置等\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run
+\HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Run
+启动项
+
+
+启动项排查：win+r–>msconfig
+隐藏所有Microsoft服务，通过查看制造商、启动项名称查看是否有木马注入
+可以配合Google、百度来一轮筛查
+计划任务
+
+
+有些黑客会在计划任务上搞你一手，前台没有任何反应，你的后台已经默默投入黑客怀抱
+计划任务–>win+r–>cmd–>schtasks | more
+C:\Windows\System32\Tasks
+Dns污染
+
+
+黑客通过修改hosts文件，来进行dns污染–>百度变阿里
+hosts文件
+C:\Windows\System32\drivers\etc
+当然一般dns污染后会指向黑客的ip(也可能是跳板机QAQ)，来进行控制
+端口、进程检查
+
+
+作为黑客，控制目标主机进行一些操纵肯定要进行连接，而端口检查也是必备。
+(以下命令皆是在cmd命令框下:win+r–>cmd)
+查看开放端口—winnetstat -ano
+筛选已经成功建立的连接–netstat -ano | find “ESTABLISHED”
+
+
+黑客有时候疏忽大意会使用一些无意义的端口连接目标ip，不像443、8080等，所以要检查目标ip的连接端口
+查看异常端口–无意义的端口7070、9876、7777、6666（这只是举例而已，发挥你的头脑找到它）等，查看pid1并使用tasklist | find "pid"查看当前进程配合百度查看是否中木马
+也可以利用Google、百度，查询ip位置预测一下
+
+
+进程名字异常/伪装—crtl+shift+esc–>hsdLj3.tmp
+服务排查—services.msc
+查看进程详细信息–辅助一手
+Wmic process where processid=‘2352(pid)’ get name,Caption,executablepath,CommandLine ,processid,ParentProcessId /value
+
+以上无工具状态排查，提高效率工具必不可少，pchunter推荐一手，排查原理和区域基本相同，但工具把基本部分进行汇总，就不用一个个去找了…
+杂项
+
+
+漏洞与补丁信息—黑客为了更方面的入侵，卸载漏洞补丁没毛病（把你家门拆了，我就更方便进来了，嘿嘿嘿）
+查看计算机相关配置信息—systeminfo
+
+
+网络行为排查：
+重要的辅助站点：(用于在线杀毒）
+https://www.virustotal.com/
+https://x.threatbook.cn/
+https://beian.cndns.com/
