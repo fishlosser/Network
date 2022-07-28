@@ -1,0 +1,177 @@
+作业控制
+
+screen -S 'ping www.google.com'
+后台执行，给一个新的工作页面
+
+# 创建一个叫Hello的虚拟终端 
+screen -S Hello
+
+screen -r pid、名字
+切换终端
+
+screen -list
+列出所有后台执行的
+
+screen -wipe
+删除死掉的后台
+
+pkill screens
+删除所有进程
+
+exit
+退出终端
+
+jobs命令
+------------------
+
+把程序放后台运行
+nohup ./xxx.sh &
+写脚本等
+
+打包（归档）和 压缩
+（文件和目录的集合，数据大小不会变）
+很多文件时，传输可能会出现传不过去数据
+
+压缩（采用算法）
+zip rar gzip bzip2
+
+归档
+tar（常用）dd
+
+--------------
+使用tar进行打包
+打包
+tar -cvf [目标路径]
+tar -cvf xiaoq.tar xiaoq/
+
+放出
+tar -xvf [目标tar文件]
+
+----------------
+使用tar进行压缩
+压缩
+tar -zcvf haha.tar.gz [文件夹名]
+
+解压缩
+tar -zxvf haha.tar.gz
+
+----------------
+使用zip进行压缩
+zip -r haha.zip [目标文件夹]
+
+使用unzip进行解压缩
+unzip haha.zip
+
+----------------
+gzip
+gzip -r [文件夹]
+
+gunzip [目标文件]
+
+=====================
+
+linux软件
+
+软件包
+GPL授权（开源授权）
+
+源码包 二进制包(RPM）
+要编译      .exe文件
+
+
+包名-版本号-发布次数-发行商-linux平台-适合的硬件平台-包拓展名
+
+httpd-x.x.x-12.xxx-centos-i386.rpm（编译好的二进制包）
+
+i386
+i586
+i686
+x86_64
+noarch 没有硬件限制
+
+----------------
+
+安装路径
+
+/etc/ 配置文件安装目录
+/usr/bin 可执行程序安装目录
+/usr/lib 程序使用的库
+/usr/share/doc 程序使用手册
+/usr/share/man 帮助文档
+
+rpm -ivh [rpm包名]
+安装软件
+
+service [服务名字] start|stop|restart....
+
+rpm -Uvh [包全名]
+升级软件
+
+rpm -e [包名]
+卸载软件
+
+rpm -qa
+查看所有安装的软件
+
+rpm -qi [包名]
+查看这个包是干嘛的
+
+rpm -qi | grep python
+查找特定
+
+rpm -ql [包名]
+查看包都被安装在哪里
+
+rpm -qf /usr/bin/jsonpointer
+通过目录寻找属于哪个包
+
+rpm -qR [包名]
+查看包依赖关系
+
+rpm -Va
+校验软件
+
+rpm -V httpd
+校验更改的地方
+（如果黑客更改配置文件）
+------------------------------
+
+yum源
+brew rpm apt 都是包管理器
+
+修改yum源
+/etc/yum.repos.d/Centos-Base.repo
+
+yum list httpd
+在软件商店查找httpd
+
+yum -y install [软件名]
+安装软件
+
+yum remove [软件名]
+卸载软件
+
+如果下载了源码包
+./configure --prefix=/usr/local/apache2
+指定安装到什么目录
+make
+make install
+
+rm -rf /usr/local/apache2
+
+=============================
+
+链接
+
+软链接
+和Windows的快捷方式很类似
+如果删除源文件，软链接存在，但是不能用
+软连接失效的时候，一般是白字红底闪烁
+ln -s ./123/1.txt kuaijie
+给1.txt建立一个软链接
+
+硬链接
+硬链接的文件删除本尊，自己也不会删除
+删除本尊以及所有硬链接文件，它才会彻底删除
+（可以做一个备份）
+ln ./123/1.txt kuaijie
