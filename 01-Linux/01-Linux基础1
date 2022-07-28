@@ -1,0 +1,153 @@
+linux
+
+操作系统--接受信息，存储数据，处理数据
+
+windows linux macos ios android  基层软件（硬件基础上的第一层软件）
+软件上安装其他应用软件：office qq 迅雷 游戏...
+
+os-操作系统提供什么？
+文件系统、设备驱动程序、用户接口、系统服务程序
+
+用户---应用程序---操作系统---硬件（执行指令）
+（从前到后的操作流程） 
+------------------
+
+Linux
+
+开源，类unix操作系统
+
+内核分为几层？
+
+硬件--内核层--shell层--应用层（基于x window环境）
+（从里到外）
+---------------------
+
+脚本语言，c语言的区别？
+c语言为通用编程语言，需要编译
+
+---------------------
+
+发行版本：
+商业发行版：
+red hat--红帽系统认证
+社区组织维护发行版：
+debian
+
+---------------------
+Linux版本有了解哪些？
+
+red hat
+RHEL，CentOS，Fedora core
+
+ubuntu（乌班图）
+debian发展来的
+
+suse linux--吸取红帽特征，主打桌面
+图形化非常方便
+
+gentoo--安装复杂，运行速度最快
+极客喜欢
+
+debian
+安全，固若金汤，基本不死机
+
+===========================
+应用层面：
+
+Linux层次结构
+
+树状结构
+
+根目录/ 最上面的目录
+
+pwd 查看当前自己在哪个文件夹中
+ls -la  查看文件和权限
+---------------
+~=在home目录里
+# = root
+$ = 其他人
+
+root用户的家目录 /root
+其他用户的家目录 /home/用户名
+
+----------------
+tap键补全命令
+（加快敲命令的速度）
+cd 切换目录
+
+whoami 我是谁
+
+history 查看之前敲过的命令
+history(历史命令）/history -c  (清空历史命令)/cat  ~/.bash_history (记录命令的隐藏文件)
+
+alias ha='cat /etc/passwd' 命令的别名
+
+unalias ha 取消系统的别名
+
+alias 查看别名
+
+永久别名
+vi /etc/.bashrc
+添加alias ha='cat /etc/passwd'
+source /etc/.bashrc
+
+
+-------------------------
+
+获得帮助
+
+ls --help
+
+yum -y install man-pages-zh-CN.noarch
+安装中文的手册
+
+echo "alias cman='man -M /usr/share/man/zh_CN'" >> .bashrc
+source .bashrc
+
+cman ls 看到中国话的ls命令介绍
+
+--------------------------------
+
+重定向
+
+输入输出：
+0=标准输入
+1=标准正确输出
+2=标准错误输出
+
+echo $?
+看上一个程序退出的状态码，不是0就是错误的
+
+重定向符号：
+> 覆盖重定向
+>> 追加重定向
+2> 覆盖重定向错误输出数据流
+2>> 追加重定向错误输出数据流
+
+合并输出：
+&> 覆盖重定向
+&>> 追加重定向
+2>&1 把错误流重定向到标准的输出文件中
+1>&2 把正确流重定向到标准的输出文件中
+
+echo haha 1> /root/path/yes.out 2> /root/path/no.out
+正确和错误分别输出到一些地方
+
+echo hahanihao 1>&2 2> /root/path/no.out
+正确输出屏幕错误输出到文件
+
+cat > haha.file << EOF（ppp)
+一直输入东西，直到输入EOF(ppp)才结束，此时haha.file里面的内容就是你输入的内容
+
+配置ssh  需要重看
+bitvise(连接ssh)
+  vi /etc/ssh/sshd_config
+#在Linux部分文件中代表注释，不运行
+需要修改部分设置，才能被远程连接bitwise
+
+修改更新源   /etc/apt/sources.list
+（重新修改更新源）
+kali的更新源设置为阿里云的：
+/etc/apt/source.list
+deb http://mirrors.aliyun.com/kali kali-rolling main non-free contrib
+deb-src http://mirrors.aliyun.com/kali kali-rolling main non-free contrib
