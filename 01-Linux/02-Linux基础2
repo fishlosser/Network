@@ -1,0 +1,145 @@
+文件结构
+
+文件层次
+
+目录名和文件名长度不超过255字符
+
+linux区分大小写，所有操作
+
+在Linux的世界里，一切都是文件
+
+相对路径，绝对路径
+
+不同方法表示file1
+绝对路径：
+/home/user1/file1
+
+相对路径：
+如果此时你在user1文件夹中
+
+file1    ./file1
+
+如果在user2文件夹下
+../user1/file1
+
+---------------------
+
+文件系统FSH
+bin 普通用户使用的命令
+sbin 管理员使用的命令
+dev 设备文件 /dev/null=垃圾桶
+root 最高用户的home文件
+home 普通用户的家
+proc 虚拟文件系统，内核，进程信息
+usr 系统文件
+/usr/local/ 软件安装目录
+/usr/bin/ 普通用户使用的程序
+/usr/sbin/ 管理员使用的程序
+/usr/lib 库文件
+/usr/lib64 64位的库文件
+boot 存放系统启动的相关文件，比如kernel引导程序
+etc 软件配置文件
+tmp 临时文件
+var 存储变化的文件，数据库，日志，邮件
+media 移动设备挂载
+mnt 手动挂载
+
+---------------------------
+
+文件管理
+
+touch
+cp 复制
+mv 剪切/重命名
+mkdir 创建文件夹
+rm 删除
+rmdir 删除文件夹
+mkdir -p (如果没有自动创建） ./dir/a{1,2,3}
+-----------------
+
+文件类型
+ls -la 详细查看文件类型
+- 普通文件
+d 目录文件
+b 区块文件
+c 字符设备文件
+s 套接字文件
+p 管道文件
+| 链接文件
+
+file
+file /etc/hosts
+显示文件类型
+
+-------------------
+
+编辑器使用
+vi vim nano 都是编辑文本的文件
+
+vi [文件名] 编辑某个文件
+i 进入insert模式
+esc 回到命令模式
+
+光标移动
+kjhl（上下左右）
+
+w = 下一个单词词首
+e = 下一个单词的词尾
+b = 上一个单词词首
+
+^ = 行首
+$ = 行尾
+dd = 删除一整行
+u = 撤销
+:[行] = 到第几行
+
+:wq = 保存并退出
+:q! = 不保存退出
+
+-----------------------
+（可选择项）
+yum -y install nano
+安装nano编辑器
+
+nano [文件名] 
+
+========================
+
+Linux的用户管理
+
+用户和组
+id
+查看当前用户的登录信息
+
+id [用户名]
+
+who
+查看谁在登录
+
+ps aux | less
+查看运行的进程
+
+/etc/passwd 用户信息
+/etc/shadow 用户密码信息
+
+root用户，uid是0，所有权限！！！
+
+
+useradd 添加用户
+-u uid
+-g 指定gid
+-c 注释信息
+-d 家目录
+-s 指定shell
+-G 附加组
+-r 创建系统用户
+
+useradd -u 1020 -g 1001 -c "this is a test user" -d /home/test1 -G games test1
+
+提权命令
+sudo 提权
+sudo su 提升到root权限
+su [用户名] 切换到哪个用户权限下工作
+
+vi /etc/sudoers
+编辑sudoers文件，否则没办法给用户定义具体权限
