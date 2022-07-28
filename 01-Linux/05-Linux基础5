@@ -1,0 +1,135 @@
+计划任务
+
+单次执行
+
+需要安装at
+
+at now +1min
+设置当前时间1分钟后执行的命令
+后面写上要执行的命令
+mkdir haha
+ctrl+d 结束
+
+systemctl start atd.service
+开启at服务
+
+systemctl status atd.service
+查看服务状态
+
+----------------
+
+使用文件的形式设置定时任务
+nano at.jobs
+
+at now +1min < at.jobs
+
+=======================
+
+循环执行
+
+crond
+systemctl start crond 开启服务
+
+systemctl enable crond 启动自动运行
+
+ps aux | grep cron 查看进程
+
+ls /var/spool/cron 每分钟执行一次
+
+crontab -l 列出所有用户的计划任务
+
+crontab -r 删除所有计划任务
+
+crontab -e 编辑计划任务
+
+0 2 * * * /root/run.sh 每天2点执行
+0 2 14 * * /root/run.sh 每个月14号2点执行
+0 [点] [日] [月] [星期] [执行的代码]
+
+0 2 2 * 5 /root/run.sh 每个月2号的2点或者星期5的2点执行
+
+0 2 2 6 5 /root/run.sh 每年6-2号2点或者周五2点执行
+
+* /5 * * * * /root/run.sh 每5分钟执行一次
+0 2 1,4,6 * * /root/run.sh 每个月的1，4，6号2点执行
+* * * * * /root/run.sh 每分钟执行
+0 * * * * /root/run.sh 每个整点执行
+* * 2 * * /root/run.sh 每个月2号的每分钟运行
+
+/etc/crontab 编辑任务的循环
+/etc/时间
+
+============================
+
+文本过滤工具
+grep
+
+-E 支持正则表达式
+-i 忽略大小写
+-n 打印行号
+-o 只打印匹配的内容
+-c 打印匹配文件的匹配函数
+-B 打印匹配的前几行
+-A 打印匹配的后几行
+-C 打印匹配的前后几行
+-v 打印不匹配的行
+-e 多点操作 grep -e "^h" -e "o$"
+--color 匹配字体有颜色
+
+grep -in "a" test1.txt
+
+grep -in "haho" -B 2 test1.txt
+
+grep -in "root" /etc/passwd  = cat /etc/passwd | grep -in "root"
+
+============================
+
+文本编辑器
+sed
+
+动作说明
+a 新增
+c 取代
+d 删除
+i 插入
+p 打印
+s 正则表达式取代
+
+sed -e '4a\newline1' test1.txt
+在test1.txt的第四行添加一个newline1文本
+
+nl /etc/passwd | sed '2,5d'
+输出/etc/passwd删除2-5行
+
+sed 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
+修改selinux的参数
+
+sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
+真正修改进去
+
+==========================
+
+awk
+文本报告分析工具
+
+awk '{print $0}' /etc/passwd
+对每一行执行print命令
+
+awk -F':' '{print $1 $2 $3}' /etc/passwd
+内置分隔符，告诉它怎么分割
+
+# 每行按空格或TAB分割，输出文本中的1、4项
+ awk '{print $1,$4}' log.txt
+
+
+root : x : 0 : 0 : root : /root : /bin/bash
+$1     $2  $3 
+
+awk -F':' '{print "username is "$1 " password is " $2}' /etc/passwd
+有顺序的输出
+
+ awk -F':' '{if(NR>=2 && NR<=5) print "username is "$1 " password is " $2}' /etc/passwd
+指定行数输出
+
+awk -F":" '/root/{print $1}' /etc/passwd
+使用：分割未来的东西，匹配关键词root所在的行，打印的结果是遵从以：进行分割的内容
