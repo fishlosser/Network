@@ -1,0 +1,145 @@
+
+视图和模板
+
+视图类（后端对前端数据的渲染，实现区别对待vip）
+use think\View;
+
+解决think not support问题
+cd tp6
+composer require topthink/think-view
+
+视图类的使用：（渲染前端）
+在app目录下创建view目录，在view下建立路由路径，文件夹名为控制器名，函数名为文件名
+在控制器中，使用视图
+use think\View;
+
+//表示初始化视图
+public function user(View $view){
+    $test1="haha this is test1";
+    //前端的t1变量对应后端的test1变量
+    $view->assign('t1',$test1);
+    //使用user.html模板
+    return $view->fetch('user');
+}
+
+//传输数组数据，前端要指定对象{$res['a1']}
+$res=['a1'=>'xiaoming','b1'=>'xiaohong'];
+$view->assign('res',$res);
+
+//传输数据库数据
+使用参数承接数据库获取的数据，然后进行渲染
+
+view里html直接可以使用(前端提供参数，前端显示）
+获取get值
+1、{$_GET['name']}
+2、{$Request.get.id}
+访问xxx.com/u1?name=xiaoli
+
+如果需要混编
+require '1.php'
+调用public目录下的1.php文件（可能出现文件包含漏洞，不建议使用）
+
+模板输出
+{$t1|default='没有东西'}
+
+数据进行md5加密（32位）
+{$t1|md5}
+
+把数据的html标签解析（可能出现xss漏洞）
+{$t1|raw}
+
+时间戳转化为日期（常用unix）
+{$t1|date='Y-m-d H:m:s'}
+
+裁剪字符(小说限看）
+{$t1 | substr=0,3}
+
+前端进行简单加减乘除
+{$num1 + $num2}
+
+省略多少位
+{$t1|number_format=2}
+
+前端流程控制
+对数据库显示数据进行优化
+foreach
+{foreach $res as $key=>$value}
+    {$value['id']------{$value['username']}----{$value['password']}<br>
+{/foreach}
+
+volist(可以指定显示数据条数）
+{volist name="res" id="value"}
+    <p>{$value['username']}----{$value['password']}</p>
+{/volist}
+
+可以指定显示多个
+{volist name="res" id="value" offset="2" length="3"}
+    <p>{$value["username"]}---{$value["password"]}</p>
+{/volist}
+
+只取出偶数的数据
+{volist name="res" id="value" mod="2"}
+{eq name="mod" value="1"}
+    <p>{$value["username"]}---{$value["password"]}</p>
+{/eq}
+{/volist}
+
+--
+if 条件判断
+
+遍历之后，只能显示id<3的数据
+{volist name="res" id="value"}
+{if ($value.id<3)}
+    <p>{$value["username"]}---{$value["password"]}</p>
+{/if}
+{/volist}
+
+{if $age<15}
+     年龄小于15
+{elseif $age>15 AND $age<18}
+     年龄大于15小于18
+{else}
+    成年
+{/if}
+
+for循环
+{for start="1" end="100" name="i" step="2"}
+    {$i}<br/>
+{/for}
+
+是否相等
+{eq name="$user" value="vip"}
+    你是vip
+{else/}
+    你不是vip
+{/eq}
+
+定义和输出变量（不常用，用于代码审计渗透）
+assign 变量 define 常量
+前端定义，前端使用
+{assign name="t2" value="nihaoya"}
+{$t2}
+
+Switch操作
+{switch $user}
+    {case 1|2|3}
+        你是1-3用户
+    {/case}
+    {case 4|5}
+    你是4-5用户
+    {/case}
+    {default/}
+    no
+{/switch}
+
+是否存在
+{in name="$user" value="1,2,3"}
+    yes
+{/in}
+
+插入php代码
+{php}....{/php}
+
+
+
+
