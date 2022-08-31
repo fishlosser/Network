@@ -1,0 +1,53 @@
+
+Thinkphp框架
+前期环境配置：
+采用php语言，开发前端，下载composer（php包管理工具）
+类似Java的maven、python的pip、前端的nodejs(npm)
+配置环境变量-->path
+（包含composer、php）
+利用cmd命令，验证环境配置完成
+
+部署tinkphp：（明确测试环境和实战部署不同）
+composer create-project topthink/think tp6
+(下载tp项目到tp6文件夹）
+
+下载中遇到问题，可以进行修复更新
+cd tp6
+composer update topthink/framework
+
+启动thinkphp
+php think run
+php think run -p 端口（以其他端口进行启动）
+
+thinkphp目录结构：
+MVC架构
+m=model 数据库模型 v=view 视图 c=controller 控制器（实现网站的基本架构）
+
+app目录下：（应用目录，负责网站控制）!
+常用controller目录下内容
+common.php内写入通用内容(验证cookie等）
+event.php(监听黑客事件）
+config目录：（配置目录）！
+extend目录：（拓展类库）
+public目录：（保存静态文件和主页）!
+route目录：（路由文件）!
+runtime目录：（运行文件夹，一般用不到）
+vendor目录：（composer目录）
+view视图目录!
+
+控制器基础:
+
+文件存放在controller下
+在config下的route.php可以修改访问控制器
+所有的控制器都用return输出
+
+（模仿index新建控制器）
+//用户访问xxx.com/u1调用test1控制器里的user方法
+Route::get('u1','test1/user');
+
+可以返回json数据
+$data=['xiaoming','haha'];
+return json($data);
+
+halt();//中断输出，用于调试程序--？
+
