@@ -1,0 +1,139 @@
+
+Thinkphp的数据库：
+配置
+平常在config/database.php中配置数据库
+
+如果在本地测试环境，在.env里配置（优先读取.env文件）
+
+https://generatedata.com/zh/generator
+（在线数据生成器，用于测试，f12突破数量限制）
+原生查询
+(自建选择器）
+<?php
+namespace app\controller;
+
+use app\BaseController;
+
+//使用外部数据库
+use think\facade\Db;
+
+class Test1 extends BaseController{
+    public function user(){
+        //原生查询
+        //:叫占位符
+        $sql="select `username`,`password` from `table1` where `id` < :id limit
+:num";
+        $map=['id'=>3,'num'=>2];
+        // $res=Db::query($sql,$map);
+        // dump($res);
+        $res=Db::execute($sql,$map);
+        return $res;
+        
+    }
+}
+查询构造器：（常用功能）
+table（）设置数据表
+field 设置查询字段列表
+find 返回满足条件的第一条记录
+select 返回满足条件的所有记录
+where 查询条件
+order 排序（升序、降序desc）
+limit 限制数量
+update 更新
+（PDO预编译实现绝对防御）
+//输出id=2的username，password
+$res=Db::table('table1')->field('username,password')->find(2);
+return json($res);
+
+查询所有、使用降序排列、限制查询数量、模糊查询（后面加一个%）、多条件模糊查询(['X%','123%'],'or')、日期查询（whereYear）、
+
+删除构造器：
+
+//删除指定内容
+$res=Db::name('table1')->where('id<3')->delete('true')
+
+增构造器：
+//增加相关数据
+$data=['username'=>'xiaogang','password'=>'666'];
+$res=Db::name('table')->save($data);
+
+更新构造器：
+//要修改的列username，修改为xxx
+$data['username']='xxx';
+$res=Db::name('table1')->where('id','6')->json(['username'])->save($data);
+return json($res);
+
+聚合查询：
+//
+$res=Db::table('table1')->count();
+
+//name是空的排除
+$res=Db::table('table1')->count('name');
+
+查看price列的最大值（平均值avg）
+$res=Db::table('table1')->max('price');
+
+在group结果之后只输出总和>100的值
+$res=Db::table('table1')->fieldRaw('username,SUM(price)')->group('sex')->have('SUM(price)>100')->select();
+
+模型的使用：
+（php、java都会涉及，并且有些情况只能通过模型进行传输）
+
+数据表对应模型类，数据表中记录的是对应模型类中的实例
+
+模型建立：
+1、在app目录下新建model，在model下新建php文件，文件名和数据库表名尽量相同，文件内容格式如下
+
+<?php
+    namespace  app\model;
+    //使用基础模型类
+    use think\Model;
+    //这里需要继承模型类，此时可以在控制器里直接操作
+    class User extends Model{
+        //重写表名
+        protected $table='User1';
+        //设置主键
+        protected $pk='id';
+       
+    }
+    ?>
+
+2、之后在对应的控制器中导入模型类
+use app\model\User;
+
+使用方法：
+//1、实例化
+$a=new table1();
+$res=$a->db()->find(2);
+return json($res);
+
+//2、方法的直接调用
+public function user(table $a){
+    $res=$a->db()->find(2);
+    return json($res);
+}
+//3、不使用对象
+设置需要更新增加的项
+$data=['username'=>'newuser1','password'=>'001','sex'=>'nv'];
+//操作数据库新建
+$res=table1::create($data);
+//可以查看刚刚添加的数据
+$insert_id=$res['id'];
+return $insert_id;
+
+修改id为7的username为zjzjzjz
+$res=table1::update(['username'=>'zjzjzj'],['id'=>'7']);
+return json($res['username']);
+
+删除id为6的数据
+$res=table1::destroy(['id'=>6]);
+return json($res)
+
+
+
+
+
+
+
+
+
