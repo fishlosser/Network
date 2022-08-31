@@ -1,0 +1,113 @@
+
+搞一个程序，实现能获取浏览器存储密钥的功能，u盘攻击
+
+静态资源加载
+在public/static下面的，可以新建css js image这些文件夹进行管理
+
+页面直接访问/static/js/test1.js
+在前端页面引入<script src="/static/js/test1.js"></script>
+
+后期处理批量数据，更改路径可以使用通用路径
+在config/view.php设置通用路径
+'tp1_replace_string'=>['{__STATIC__}'=>'/static','{__JS__}'=>'/static/js','{__CSS__}'=>'/static/css']
+之后前端可以改成<script src="{__JS__}/test1.js"></script>
+
+模板加载
+在view目录下，以view为主目录，新建文件夹common
+新建common/header.html和footer.html
+在header和footer中写上公用代码
+
+在需要引入公用地方（尽量不要涉及关键代码）
+{include file="common/header"}
+user page这里可以写独有代码
+{include file="common/footer"}（主要涉及法律条纹等）
+
+路由基础
+
+访问/user使用test1类中的user方法
+Route::get('user','test1/user');
+
+使用get/post都能访问/user路由
+Route::rule("user","test1/user","GET|POST");
+
+只允许传入数字的id1和id2
+Route::rule("user/:id1/:id2","test1/user","GET|POST")->pattern(["id"=>"\d+"."id2"=>"\d+"]);
+
+必须加.html才能访问（误导hack）
+Route::rule("user/:id1/:id2","test1/user","GET|POST")->ext("html");
+
+不仅.html还必须https才能访问
+Route::rule("user/:id1/:id2","test1/user","GET|POST")->ext("html")->https();
+.
+必须通过域名才能访问（避免爬虫）
+Route::rule("user/:id1/:id2","test1/user","GET|POST")->ext("html")->domain("cctv.com");
+
+要求必须是ajax请求
+Route::rule("user/:id1/:id2","test1/user","GET|POST")->ext("html")->domain("cctv.com")->ajax();
+
+增加额外的参数
+Route::rule("user/:id1/:id2","test1/user","GET|POST")->ext("html")->append(['status'=>1]);
+
+option简写
+Route::rule("user/:id1/:id2","test1/user","GET|POST")>option(['ext'=
+>"html","https"=>true]);
+
+路由组
+//group的名字一定是第一道路由
+Route::group("haha1",function(){
+    //xxx.com/haha1/tu/2
+    Route::rule("tu/:id1","test1/user");
+    //xxx.com/haha1/ta/2
+    Route::rule("ta/:id2","test1/admin");
+})->ext("html");
+
+借助正则表达式进行判断
+Route::group("haha1",function({
+    Route::rule(":id1","test1/user");
+    Route::rule(":id2","test1/admin");
+})->ext("html")->pattern(["id1"=>"\d+"],"id2"=>"\w+"]);
+如果xx.com/haha1/？是数字就采用test1/user,是字符串就采用test1/admin
+
+根据请求来区分不同的处理函数
+Route::group("haha1",function(){
+    Route::get(":id","test1/user");
+    Route::get(":id","test1/admin");
+})->ext("html")->pattern(["id"=>"\d+"]);
+
+miss路由（如何显示404页面）
+如果需要展示404页面，会调用miss路由
+（可以在分组使用，也可以全局使用，实现管理员和普通用户的区别处理）
+//添加miss路由
+Route::miss('public/miss');
+（404页面编辑方式）
+1、在controller中，新建Error.php
+<?php
+namespace app\controller;
+class Error{
+    public function miss(){
+                return "404 page";
+    }
+}
+?>
+2、Route::miss(function(){
+            return "I am also 404 page";
+});
+
+跨域请求（前后端分离时常用）
+
+如果不同域名发来的请求会被拦截！！！（默认情况，需要人为开启）
+A网站---www.baidu.com
+B网站---www.cctv.com
+
+只允许b.com来访问我my.com的网站的video/:id的路由
+Route::domain('tmall.com',function(){
+    Route::rule('video/:id','test1/user')->allowCrossDomain(['Acess-Control-Allow-Origin'=>'https://taobao.com']);
+});
+A服务器www.baidu.com--用vue写前端页面，用axios（ajax）---请求B服务器api.tmall.com
+
+现在的跨域请求
+A前端--nginx服务器--后端
+（前端工程师已经解决问题，可以不用考虑）
+
+
+
