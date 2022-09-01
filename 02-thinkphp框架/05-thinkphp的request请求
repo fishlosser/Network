@@ -1,0 +1,74 @@
+
+Request请求基础(代替get请求）
+1、引入request
+use think\Request
+//在函数参数列表中增加request
+public function user(View $view,table $table,Request $request){
+    //接受username
+    $id=$request->param('username');
+    $view->assign('id',$id);
+    return $view->fetch('user');
+}
+
+/haha1/tu.html?username=haha(前端传参数，判断request请求）
+
+2、推荐使用方法
+use think\facade\Request;
+
+$id=Request::param('username');
+
+3、使用助手函数
+$id=request->param('username');
+
+Request的其他功能：
+
+Request后面参数
+param 请求变量(get post)
+put、delete、session、cookie、env、ip、request、server、route、file
+
+告诉我使用什么控制器
+$id=Request::controller(true);
+
+告诉我使用哪个函数
+$id=Request::action();
+
+指定使用get还是post
+$id=Request::get('username');
+$id=Request::post('username');
+
+获取web请求(除域名外）
+$id=Request::url();
+
+获取ip地址
+$id=Request::ip();
+
+判断提交的参数里username参数名是否存在，并且是get提交
+$id=Request::has('username','get');
+简写
+$id=input('get.username');
+
+以数组的形式输出所有get进来的参数
+dump(input('get.'));
+
+使用htmlspecialchars对get进来的password进行过滤
+dump(input('get.password','','htmlspecialchars'));
+
+可以设置默认值
+$id=Request::get('username','默认值');
+
+input('username','默认值');
+
+只获得id和name传入的值,其他无视，出来的是数组
+dump(Request::only(['id','name']));
+
+设置默认值，如果name&id=3此时name为空，并不会用默认值，必须是没有传入name,才会用默认值
+dump(Request::only(['id'=>'0','name'=>'xiaoming']));
+
+只允许get还是post
+dump(Request::only(['id','name'],'get'));
+
+排除id和name的参数
+dump(Request::except(['id','name']));
+
+
+dump()进行输出测试
