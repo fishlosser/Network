@@ -1,0 +1,46 @@
+
+伪静态
+1、预防黑客攻击（伪静态.html)
+2、容易被搜索引擎搜取
+
+开启缓存（真实的项目一定开启缓存）
+app/middleware.php
+开启这个功能
+\think\middleware\CheckRequestCache::class,
+
+路由里面
+->ext('html')->cache(3600);
+
+runtime/temp里面是访问页面的缓存
+
+保留计算结果，利于下一次其他用户的访问（节省时间和cpu功效）
+
+输出和重定向
+
+普通response
+return response($id);
+
+增加返回状态码
+return response($id)->code(404);
+
+添加头部
+return response($id)->code(404)->header(['toubu'=>'hahahaha']);
+
+站外重定向(用于支付跳转或者钓鱼网站）
+return redirect('http://www.baidu.com');
+
+站内重定向
+return redirect('/hahah1/tu.html');
+
+return redirect(url('/haha1/tu.html'));
+
+如果已经登录过，有session了，还需要站内重定向（无法进行数据的传输）
+
+在中间件开启
+\think\middleware\SessionInit::class
+session("name");
+return redirect('/haha1/tu.html')->with('name','xiaoming');
+
+
+
+
