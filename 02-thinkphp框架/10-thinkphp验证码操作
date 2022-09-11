@@ -1,0 +1,40 @@
+
+验证码
+composer require topthink/think-captcha
+
+配置文件
+config/captcha.php
+
+复杂型验证（优先使用）
+前端
+{:captcha_img()}
+<form action="/haha1/ta.html" method="post">
+    {:captcha_img()}
+    <input type="text" name="code"/>
+    <input type="submit" value="提交"/>
+</form>
+
+控制器
+$validate=Validate::rule([
+    'captcha'=>'require|captcha'
+]);
+
+$res=$validate->check([
+    'captcha'=>Request::post('code')
+]);
+dump($res);
+
+
+让验证码成为独立的地址
+//验证码引入
+use think\captcha\facade\Captcha
+//独立的验证码
+public function yzm(){
+    return Captcha::create();
+}
+路由里面
+//验证路由
+Route::get('yzm','test1/yzm');
+之后访问http://127.0.0.1:8000/yzm就是单独的验证码地址
+
+<img src="/yzm" id="verify_img" onclick="this.src=this.src+'?'"/>
