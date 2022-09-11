@@ -1,0 +1,59 @@
+
+session权限维持
+
+中间件开启
+middleware.php
+\think\middleware\SessionInit::class
+
+在控制器中
+use think\facade\Session;
+
+//设置session
+Session::set("username","xiaoli");
+Session::set("password","1239");
+
+//读取所有session
+        //dump(Session::all());
+        //读取单个session
+        dump(Session::get("username"));
+        
+        //使用request取值
+        //dump(Request::session('username'));
+        //判断session里是否有username段
+        dump(Session::has("username"));
+        //删除session
+        dump(Session::delete('username'));
+
+session获取为数组类型
+
+助手函数：（安全性降低）
+dump(session('username'));
+//has判断
+dump(session('?username'));
+//删除
+session('usrename',null);
+//赋值
+session('username','xiaohong');
+
+
+Cookie的权限维持（session为主）
+config->cookie.php（设置生效时间）
+
+use think\facade\Cookie;
+
+//设置cookie
+Cookie::set('user','zj',3700);
+//获取cookie
+dump(Cookie::get('user'));
+
+助手函数：
+cookie('user','haha');
+cookie('user');
+
+
+
+
+
+
+
+
