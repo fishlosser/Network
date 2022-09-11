@@ -1,0 +1,41 @@
+
+文件上传
+
+上传路径的修改在config/filesystem.php
+可以修改为'root'=>'public/static'
+
+前端
+<form action="/haha1/ta.html" method="post" enctype="multipart/form-data">
+    <input type="file" name="image"/><br/>
+    <input type="submit" name="submit"/>
+</form>
+
+控制器
+use think\facade\Filesystem;
+
+$file=Request::file("image");
+//dump($file);
+$info=Filesystem::putfile('images',$file);
+dump($info)
+
+此时文件在\tp6\runtime\storage\images\20220729\随机数.jpg
+
+带验证的文件上传
+$file=Request::file("image");
+//dump($file);
+
+$validate=Validate::rule([
+    'image'=>'file|fileExt:jpg,png,gif'
+]);
+//验证
+$res=$validate->check([
+    'image'=>$file
+]);
+//如果通过了验证
+if($res){
+    $info=Filesystem::putfile('images',$file);
+    dump($info);
+}else{
+    dump($validate->getError());
+}
+
