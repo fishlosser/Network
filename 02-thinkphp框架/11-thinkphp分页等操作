@@ -1,0 +1,32 @@
+
+分页
+
+控制器
+//每页3条
+$res=$table1->db()->paginate(3);
+$view->assign('res','$res');
+
+前端
+{volist name='res' id='value'}
+    <p>{$key}:{$value['username']}---{$value['password']}</p?
+{/volist}
+
+这里是页码
+{$res|raw}
+
+//每页5条数据，一共取出10条数据
+$res=$table1->db()->paginate(5,10);
+
+//每页显示三条数据，只显示上下页
+$res=$table1->db()->paginate(3,true);
+
+//带参数的翻页，每页32条数据，并且带参数
+$res=$table1->db()->field('username,sex')->paginate(['list_rows'=>32,'query'=>request()->param()]);
+
+图片操作--？
+
+多应用模式(分而治之，形成不同的网站）--？
+composer require topthink/think-multi-app
+
+
+
