@@ -1,0 +1,75 @@
+
+验证器
+生成一个验证器
+php think make:validate User
+
+会生成app/validate/User.php的验证器
+
+定义规则
+protected $rule=[
+    'name'=>'require|max:5',
+    'price'=>'number|between:1,10',
+    'email'=>'email'
+];
+不遵守规则会提示什么
+protected $message=[
+    'name.require'=>'name不能为空',
+    'name.max'=>'name不能超过五个字'
+];
+
+在控制器里引入
+use app\validate\User;
+在使用的地方使用
+try{
+    //接收name的参数
+$name=Request::param('name');
+//使用User.php里的name规则去验证
+validate(User::class)->check(['name'=>$name]);
+}catch(ValidateException $e){
+    //如果检查出问题，输出错误信息
+    dump($e->getError());
+   // $msg=$e->getErrot();实战中渲染到前端
+}
+
+注意输出数据类型是数组还是字符串
+
+简化版验证器（适合临时验证，不同的用户规则不同，在大环境下添加小规则）
+use think\facade\Validate;
+$name=Request::param('name');
+$validate=Validate::rule([
+    'name'=>'require|max:5'
+]);
+$res=$validate->batch(true)->check(['name'=>$name]);
+//如果验证出错
+if(!$res){
+    //此时出错，依然调用User.php中的出错规则，并且返回数组格式
+    dump($validate->getError());
+}
+
+直接使用自带的验证规则
+use think\facade\Validate
+dump(Validate::isEmail($name));
+
+require 不能为空
+number 必须为纯数字
+integer 必须为整数
+float 浮点数
+email 必须为email
+date 是否是有效日期
+alpha 纯字母
+alphaNum 字母+数字
+alphaDash 字母数字_-
+chs 纯汉字
+chsAlpha 汉字+字母
+must 必须有
+length:4 长度必须为4
+length:2,4 长度为2-4
+allowIp:127.0.0.1,192.168.152.130 允许ip
+
+
+
+
+
+
+
+
